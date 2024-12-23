@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>web browser remote linux app control</title>
+</head>
+<body>
+<h1>Workerman + Linux XWD + HTML</h1>
+<p style="font-size: smaller;">环境要求，安装了linux的X桌面环境（包含命令行工具xwd、xwdtopnm、pnmtojpeg、xwininfo、xdotool、xsel），支持workerman的php运行环境</p>
+
+<input type="file" id="fileInput" />
+<button id="smallFileUploadButton">上传文件</button>
+
+<button id="btnBackspace" style="position: absolute;" onclick="backspace();">Backspace</button>
+<br>
+<canvas id="screenshotJpg" width="500" height="500"></canvas>
+
+<ul id="contextMenu" style="display:none; position:absolute; background-color:white; border:1px solid black; list-style-type:none; padding:5px;">
+    <li>左键双击</li>
+    <li>右键单击</li>
+    <li>文本输入</li>
+</ul>
+
+<script>
+    const canvas = document.getElementById('screenshotJpg');
+    const ctx = canvas.getContext('2d');
+    const imageUrl = '/?action=screenshotJpg'; // 替换为实际的图片链接
+
+    function refreshCanvas() {
+        fetch(imageUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                const imageUrl = URL.createObjectURL(blob);
+                const img = new Image();
+                img.onload = function () {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    URL.revokeObjectURL(imageUrl);
+
+                    btnBackspace.style.left = canvas.width - btnBackspace.offsetWidth + 'px';
+                };
+                img.src = imageUrl;
+            })
+            .catch(error => {
+                console.error('获取图片出错：', error);
+            });
+    }
+
+    canvas.addEventListener('mousedown', function (e) {
+        if (e.target !== canvas) {
+            return;
+        }
+        if (e.button === 0) { // 判断是否是鼠标左键点击
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            console.log('鼠标左键点击位置：', x, y);
+
+            const formData = new URLSearchParams();
+            formData.append('x', x);
+            formData.append('y', y);
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            };
+            fetch('/?action=mousemoveClick', options)
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.error('Error:', error));
+        }
+    });
+
+    refreshCanvas(); // 首次加载图片并绘制到canvas
+    setInterval(refreshCanvas, 1000); // 每隔1秒调用refreshCanvas函数进行刷新
+
+
+    // 为canvas添加右键点击事件监听器
+    canvas.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+
+        // 设置右键菜单的位置
+        contextMenu.style.left = e.clientX + 'px';
+        contextMenu.style.top = e.clientY + 'px';
+
+        // 显示右键菜单
+        contextMenu.style.display = 'block';
+
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        contextMenu.upperLeftX = x;
+        contextMenu.upperLeftY = y;
+
+    });
+
+    // 为右键菜单添加点击事件监听器
+    contextMenu.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // 获取点击的菜单项文本
+        const itemText = e.target.textContent;
+        console.log("选中了，"+itemText);
+
+        if (itemText === "左键双击") {
+            const formData = new URLSearchParams();
+            formData.append('x', contextMenu.upperLeftX);
+            formData.append('y', contextMenu.upperLeftY);
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            };
+            fetch('/?action=mousemoveLeftDoubleClick', options)
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.error('Error:', error));
+
+        }
+        if (itemText === "右键单击") {
+            const formData = new URLSearchParams();
+            formData.append('x', contextMenu.upperLeftX);
+            formData.append('y', contextMenu.upperLeftY);
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            };
+            fetch('/?action=mousemoveRightClick', options)
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.error('Error:', error));
+
+        }
+        if (itemText === "文本输入") {
+            const formData = new URLSearchParams();
+            formData.append('x', contextMenu.upperLeftX);
+            formData.append('y', contextMenu.upperLeftY);
+            formData.append('text', prompt("输入你的文本"));
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData.toString()
+            };
+            fetch('/?action=textInput', options)
+                .then(response => response.json())
+                .then(result => console.log(result))
+                .catch(error => console.error('Error:', error));
+
+        }
+
+        // 隐藏右键菜单
+        contextMenu.style.display = 'none';
+    });
+
+    // 为document添加点击事件监听器，用于在点击其他地方时隐藏右键菜单
+    document.addEventListener('click', function (e) {
+        if (e.target!== canvas && e.target!== contextMenu) {
+            contextMenu.style.display = 'none';
+        }
+    });
+
+    function backspace() {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: ''
+        };
+        fetch('/?action=backspace', options)
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.error('Error:', error));
+    }
+
+
+    const fileInput = document.getElementById('fileInput');
+    const smallFileUploadButton = document.getElementById('smallFileUploadButton');
+    smallFileUploadButton.addEventListener('click', async () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/?action=smallFileUpload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.text();
+                console.log(result);
+                fileInput.value = '';
+            } catch (error) {
+                console.error('上传出错:', error);
+                fileInput.value = '';
+            }
+        } else {
+            console.log('请选择要上传的文件');
+        }
+    });
+
+</script>
+
+</body>
+</html>

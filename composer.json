@@ -1,0 +1,18 @@
+{
+    "name": "wangchao/xwdremote",
+    "type": "project",
+    "require": {
+        "workerman/workerman": "^4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wangchao\\Xwdremote\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "wangchao",
+            "email": "zjsxwc@qq.com"
+        }
+    ]
+}
