@@ -82,6 +82,10 @@ $httpWorker->onWorkerStart = function ($worker) {
         global $decNumString;
         $screenshotData = shell_exec("xwd -display :0.0  -id {$decNumString} | xwdtopnm | pnmtojpeg");
     });
+
+    Timer::add(10, function () {
+        refreshWindowData();
+    });
 };
 
 // 运行所有的Worker
