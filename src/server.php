@@ -10,7 +10,8 @@ use Workerman\Protocols\Http\Request;
 use Workerman\Connection\ConnectionInterface;
 
 
-$windowTitle = "FlClash";
+$windowTitle = "Wine Desktop";
+$displayId = "0";//if swith logined user on linux, the display id of X server will change.
 $absoluteUpperLeftX = null;
 $absoluteUpperLeftY = null;
 $decNumString = null;
@@ -80,7 +81,8 @@ $httpWorker->onWorkerStart = function ($worker) {
     Timer::add(0.2, function () {
         global $screenshotData;
         global $decNumString;
-        $screenshotData = shell_exec("xwd -display :0.0  -id {$decNumString} | xwdtopnm | pnmtojpeg");
+        global $displayId;
+        $screenshotData = shell_exec("xwd -display :". $displayId  .".0  -id {$decNumString} | xwdtopnm | pnmtojpeg");
     });
 
     Timer::add(10, function () {
