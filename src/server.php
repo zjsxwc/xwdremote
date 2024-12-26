@@ -11,6 +11,8 @@ use Workerman\Connection\ConnectionInterface;
 
 
 $windowTitle = "Wine Desktop";
+$win32exePath = __DIR__ . "/../../win32ExeDir/win32.exe";
+$startWindowCmd = "/usr/bin/wine " . $win32exePath;
 $displayId = "0";//if swith logined user on linux, the display id of X server will change.
 $absoluteUpperLeftX = null;
 $absoluteUpperLeftY = null;
@@ -86,6 +88,13 @@ $httpWorker->onWorkerStart = function ($worker) {
     });
 
     Timer::add(10, function () {
+        global $windowTitle;
+        global $startWindowCmd;
+        $shellout = shell_exec('xwininfo -name "'.$windowTitle.'"');
+        if (strpos("error", $shellout) !== false) {
+            shell_exec($startWindowCmd);
+        }
+
         refreshWindowData();
     });
 };
