@@ -9,10 +9,11 @@ use Workerman\Protocols\Http\Response;
 use Workerman\Protocols\Http\Request;
 use Workerman\Connection\ConnectionInterface;
 
+include_once __DIR__."/parameters.php";
 
-$windowTitle = "Wine Desktop";
-$win32exePath = __DIR__ . "/../../win32ExeDir/win32.exe";
-$startWindowCmd = "/usr/bin/wine " . $win32exePath;
+global $windowTitle;
+global $startWindowCmd;
+
 $displayId = "0";//if swith logined user on linux, the display id of X server will change.
 $absoluteUpperLeftX = null;
 $absoluteUpperLeftY = null;
@@ -88,13 +89,6 @@ $httpWorker->onWorkerStart = function ($worker) {
     });
 
     Timer::add(10, function () {
-        global $windowTitle;
-        global $startWindowCmd;
-        $shellout = shell_exec('xwininfo -name "'.$windowTitle.'"');
-        if (strpos("error", $shellout) !== false) {
-            shell_exec($startWindowCmd);
-        }
-
         refreshWindowData();
     });
 };
