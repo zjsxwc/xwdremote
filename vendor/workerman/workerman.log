@@ -34,3 +34,6 @@
 2024-12-26 02:00:38 pid:11530 Workerman[src/server.php] start in DEBUG mode
 2024-12-26 02:01:37 pid:11530 Workerman[server.php] stopping ...
 2024-12-26 02:01:37 pid:11530 Workerman[server.php] has been stopped
+2024-12-26 02:13:09 pid:13669 Workerman[src/server.php] start in DEBUG mode
+2024-12-26 02:13:49 pid:13669 Workerman[server.php] stopping ...
+2024-12-26 02:13:49 pid:13669 Workerman[server.php] has been stopped
