@@ -1,6 +1,43 @@
 {
     "packages": [
         {
+            "name": "workerman/channel",
+            "version": "v1.2.1",
+            "version_normalized": "1.2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/channel.git",
+                "reference": "78ba6093764c8e2d2952c7bb53a52b2472da1bc7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/channel/zipball/78ba6093764c8e2d2952c7bb53a52b2472da1bc7",
+                "reference": "78ba6093764c8e2d2952c7bb53a52b2472da1bc7",
+                "shasum": ""
+            },
+            "require": {
+                "workerman/workerman": ">=4.0.12"
+            },
+            "time": "2024-06-10T00:49:42+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Channel\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "support": {
+                "issues": "https://github.com/walkor/channel/issues",
+                "source": "https://github.com/walkor/channel/tree/v1.2.1"
+            },
+            "install-path": "../workerman/channel"
+        },
+        {
             "name": "workerman/workerman",
             "version": "v4.2.1",
             "version_normalized": "4.2.1.0",

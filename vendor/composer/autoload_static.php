@@ -12,6 +12,10 @@ class ComposerStaticInit9862c59106a88118cd2d17265333025b
             'Workerman\\' => 10,
             'Wangchao\\Xwdremote\\' => 19,
         ),
+        'C' => 
+        array (
+            'Channel\\' => 8,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -22,6 +26,10 @@ class ComposerStaticInit9862c59106a88118cd2d17265333025b
         'Wangchao\\Xwdremote\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Channel\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/channel/src',
         ),
     );
 

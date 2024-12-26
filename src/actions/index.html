@@ -103,7 +103,7 @@
     });
 
     refreshCanvas(); // 首次加载图片并绘制到canvas
-    setInterval(refreshCanvas, 200); // 每隔10秒调用refreshCanvas函数进行刷新
+    setInterval(refreshCanvas, 10000); // 每隔10秒调用refreshCanvas函数进行刷新
 
 
     // 为canvas添加右键点击事件监听器
@@ -237,6 +237,42 @@
             console.log('请选择要上传的文件');
         }
     });
+
+
+
+    const ws = new WebSocket('ws://'+window.location.hostname+':WS_PORT');
+    ws.onopen = function() {
+        console.log('Connected to WebSocket');
+    };
+    ws.onmessage = function(event) {
+        if (!event.data) {
+            return;
+        }
+        let diffData = JSON.parse(event.data);
+        if (diffData.msg) {
+            console.log(diffData.msg);
+            return;
+        }
+        console.log("get diff data size " + diffData.length);
+        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let pixels = imageData.data;
+        for (let i = 0; i < diffData.length; i++) {
+            let x = diffData[i].x;
+            let y = diffData[i].y;
+            let newColor = diffData[i].newColor;
+            let index = (y * canvas.width + x) * 4;
+            pixels[index] = newColor[0];
+            pixels[index + 1] = newColor[1];
+            pixels[index + 2] = newColor[2];
+        }
+        ctx.putImageData(imageData, 0, 0);
+    };
+    ws.onerror = function(error) {
+        console.error('WebSocket Error:', error);
+    };
+    ws.onclose = function() {
+        console.log('WebSocket closed');
+    };
 
 </script>
 

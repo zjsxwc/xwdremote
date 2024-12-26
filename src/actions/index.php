@@ -38,6 +38,9 @@ function index(Request $request) {
     // 设置响应头，这里设置内容类型为text/html
     $response->withHeader('Content-Type', 'text/html');
     // 设置响应体内容，这里返回一个简单的HTML页面示例
-    $response->withBody(file_get_contents(__DIR__."/index.html"));
+    global $wsPort;
+    $html = file_get_contents(__DIR__."/index.html");
+    $html = str_replace("WS_PORT", $wsPort, $html);
+    $response->withBody($html);
     return $response;
 }

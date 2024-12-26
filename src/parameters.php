@@ -6,3 +6,5 @@ $startWindowCmd = "/usr/bin/wine " . $win32exePath;
 $validCredentials = [
     "tester" => "pwd123456"
 ];
+$httpPort = 58081;
+$wsPort = $httpPort+1;

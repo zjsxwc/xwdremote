@@ -1,22 +1,31 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '1a35d0376ae35e7051c2d34ac108bd22eed34185',
         'name' => 'wangchao/xwdremote',
         'dev' => true,
     ),
     'versions' => array(
         'wangchao/xwdremote' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '1a35d0376ae35e7051c2d34ac108bd22eed34185',
+            'dev_requirement' => false,
+        ),
+        'workerman/channel' => array(
+            'pretty_version' => 'v1.2.1',
+            'version' => '1.2.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../workerman/channel',
+            'aliases' => array(),
+            'reference' => '78ba6093764c8e2d2952c7bb53a52b2472da1bc7',
             'dev_requirement' => false,
         ),
         'workerman/workerman' => array(
